@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ItshareCenter" Class="ItshareDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-SKKR1NP\SQLEXPRESS;Initial Catalog=ItshareCenter;Integrated Security=True" SettingsObjectName="WpfApplication2.Properties.Settings" SettingsPropertyName="cnn" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Accounts" Member="Accounts">
+    <Type Name="Account">
+      <Column Name="acc_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="acc_name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="acc_address" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="acc_phone" Type="System.String" DbType="NVarChar(11)" CanBeNull="true" />
+      <Column Name="acc_sallry" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="acc_nots" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Courses" Member="Courses">
+    <Type Name="Course">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="Course_Instructor_Course" Member="Instructor_Courses" ThisKey="CourseID" OtherKey="CourseID" Type="Instructor_Course" />
+      <Association Name="Course_Student_Course" Member="Student_Courses" ThisKey="CourseID" OtherKey="CourseID" Type="Student_Course" />
+      <Association Name="Category_Course" Member="Category" ThisKey="CategoryID" OtherKey="CategoryID" Type="Category" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Instructor_Courses" Member="Instructor_Courses">
+    <Type Name="Instructor_Course">
+      <Column Name="InstructorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CourseID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Course_Instructor_Course" Member="Course" ThisKey="CourseID" OtherKey="CourseID" Type="Course" IsForeignKey="true" />
+      <Association Name="Instructor_Instructor_Course" Member="Instructor" ThisKey="InstructorID" OtherKey="InstructorID" Type="Instructor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Instructors" Member="Instructors">
+    <Type Name="Instructor">
+      <Column Name="InstructorID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Instructor_Instructor_Course" Member="Instructor_Courses" ThisKey="InstructorID" OtherKey="InstructorID" Type="Instructor_Course" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student_Courses" Member="Student_Courses">
+    <Type Name="Student_Course">
+      <Column Name="StudentID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Course_Student_Course" Member="Course" ThisKey="CourseID" OtherKey="CourseID" Type="Course" IsForeignKey="true" />
+      <Association Name="Student_Student_Course" Member="Student" ThisKey="StudentID" OtherKey="StudentID" Type="Student" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Students" Member="Students">
+    <Type Name="Student">
+      <Column Name="StudentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="NVarChar(11)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="age" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Student_Student_Course" Member="Student_Courses" ThisKey="StudentID" OtherKey="StudentID" Type="Student_Course" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Categories" Member="Categories">
+    <Type Name="Category">
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Created_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Category_Course" Member="Courses" ThisKey="CategoryID" OtherKey="CategoryID" Type="Course" />
+    </Type>
+  </Table>
+  <Function Name="dbo.AddCategory" Method="AddCategory">
+    <Parameter Name="name" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SearchCourse" Method="SearchCourse">
+    <Parameter Name="KeyWord" Parameter="keyWord" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SearchCourseResult">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.AddInstructor" Method="AddInstructor">
+    <Parameter Name="name" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.DeleteCourse" Method="DeleteCourse">
+    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.EditCourse" Method="EditCourse">
+    <Parameter Name="CourseID" Parameter="courseID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="title" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="price" Type="System.Double" DbType="Float" />
+    <Parameter Name="period" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="categoryID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="description" Type="System.String" DbType="NVarChar(500)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.GetAllCategories" Method="GetAllCategories">
+    <ElementType Name="GetAllCategoriesResult">
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Created_at" Type="System.Data.Linq.Binary" DbType="rowversion" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetAllCourses" Method="GetAllCourses">
+    <ElementType Name="GetAllCoursesResult">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetCourseData" Method="GetCourseData">
+    <Parameter Name="CourseID" Parameter="courseID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetCourseDataResult">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetCoursesByCategory" Method="GetCoursesByCategory">
+    <Parameter Name="CategoryID" Parameter="categoryID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetCoursesByCategoryResult">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.InsertCourse" Method="InsertCourse">
+    <Parameter Name="Title" Parameter="title" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Price" Parameter="price" Type="System.Double" DbType="Float" />
+    <Parameter Name="Period" Parameter="period" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="CategoryID" Parameter="categoryID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="Description" Parameter="description" Type="System.String" DbType="NVarChar(500)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.InstData" Method="InstData">
+    <Parameter Name="instID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="InstDataResult">
+      <Column Name="InstructorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="" Member="Column1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Login" Method="Login">
+    <Parameter Name="UserName" Parameter="userName" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Password" Parameter="password" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="LoginResult">
+      <Column Name="UserName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Pagination_Test_1" Method="Pagination_Test_1">
+    <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PageSize" Parameter="pageSize" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Pagination_Test_1Result">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Paging" Method="Paging">
+    <Parameter Name="CategoryID" Parameter="categoryID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CoursesPerPage" Parameter="coursesPerPage" Type="System.Int32" DbType="Int" />
+    <Parameter Name="HowManyPage" Parameter="howManyPage" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="PagingResult">
+      <Column Name="Number" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CourseID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Paging1" Method="Paging1">
+    <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CoursesPerPage" Parameter="coursesPerPage" Type="System.Int32" DbType="Int" />
+    <Parameter Name="HowManyPage" Parameter="howManyPage" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <ElementType Name="Paging1Result">
+      <Column Name="RowNum" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Period" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CategoryID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.saving" Method="saving">
+    <Parameter Name="acc_name" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="acc_adress" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="acc_phone" Type="System.String" DbType="NVarChar(11)" />
+    <Parameter Name="acc_sallry" Type="System.Double" DbType="Float" />
+    <Parameter Name="acc_nots" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>
